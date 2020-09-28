@@ -17,8 +17,9 @@ from django.contrib import admin
 from django.urls import path, include
 from weather import views as weather_views
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # We want to use the URLs as defined in the "weather" app, which is why I include weather.urls
+    # here for all URLs matching ''
     path('', include('weather.urls')),
 ]

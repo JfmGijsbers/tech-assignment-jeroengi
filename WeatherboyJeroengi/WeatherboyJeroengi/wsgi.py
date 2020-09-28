@@ -15,5 +15,5 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WeatherboyJeroengi.settings')
 
 application = get_wsgi_application()
 
-from django.core.management import call_command
-call_command('fetch_data')
+#from django.core.management import call_command
+#call_command('fetch_data')

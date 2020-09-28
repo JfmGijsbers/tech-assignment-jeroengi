@@ -2,11 +2,12 @@
 
 <title> Weatherboy </title>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="script.js" type="module"></script>
 <meta name="description" content="Wouldn't you like to know, weatherboy">
-<meta http-equiv="refresh" content="300">
+<!-- <meta http-equiv="refresh" content="300"> -->
 <link rel="stylesheet" href="style.css">
 
 </style>
@@ -31,31 +32,32 @@
                 </tbody>
             </table>
             {% if is_paginated %}
-        {% if page_obj.has_previous %}
+            {% if page_obj.has_previous %}
             <a class="btn btn-outline-primary mb-4" href="?page=1">First</a>
             <a class="btn btn-outline-primary mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-        {% endif %}
-        {% for num in page_obj.paginator.page_range %}
-            {% if page_obj.number == num %}   
-                <a class="btn btn-primary mb-4" href="?page={{ num }}">{{ num }}</a>
-            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                <a class="btn btn-outline-primary mb-4" href="?page={{ num }}">{{ num }}</a>
             {% endif %}
-        {% endfor %}
-        {% if page_obj.has_next %}
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <a class="btn btn-primary mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline-primary mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
             <a class="btn btn-outline-primary mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
             <a class="btn btn-outline-primary mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-        {% endif %}
-    {% endif %}
+            {% endif %}
+            {% endif %}
         </div>
-        
+
     </div>
 
 
     <form method="post">
         {% csrf_token %}
-        <button type="submit" name="run_script">Refresh</button>
+        <button type="submit" name="run_script" href="refresh/">Refresh</button>
     </form>
+    <a href="refresh/">Refresh</a>
 
 </body>
 

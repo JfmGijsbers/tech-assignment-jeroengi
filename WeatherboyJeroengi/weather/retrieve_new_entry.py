@@ -1,14 +1,23 @@
+from django.core.management.base import BaseCommand, CommandError
+
 import requests
 from bs4 import BeautifulSoup
 import re
 import datetime
-from .models import Page
+from weather.models import Page
+import sched, time
+from schedule import Scheduler
 
+
+# The class for a column in the table.
 class WeatherEntry():
     def __init__(self, url):
+        # Even though only the url needs to be stored, it's faster and clearer to also store
+        # the page text, BeautifulSoup element. Furthermore, since we only want to use
+        # data from weather station "De Bilt", we pre-select that column as well.
         self.url = url
         self.text = requests.get(url).text
-        self.soup = BeautifulSoup(self.text)
+        self.soup = BeautifulSoup(self.text, features="html.parser")
         self.deBilt = self.soup.find('td', text='De Bilt').parent
 
     def retrieve_temperature(self):
@@ -34,9 +43,10 @@ class WeatherEntry():
             return "Fatal error retrieving wind"
 
 
-
 def main():
     url = 'https://www.knmi.nl/nederland-nu/weer/waarnemingen'
     weather_entry = WeatherEntry(url)
     db_entry = Page(temperature=weather_entry.retrieve_temperature(), date=weather_entry.retrieve_date())
     db_entry.save()
+    
+        
