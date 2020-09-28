@@ -1,14 +1,17 @@
+from django.core.management.base import BaseCommand, CommandError
+
 import requests
 from bs4 import BeautifulSoup
 import re
 import datetime
-from .models import Page
+from weather.models import Page
+import sched, time
 
 class WeatherEntry():
     def __init__(self, url):
         self.url = url
         self.text = requests.get(url).text
-        self.soup = BeautifulSoup(self.text)
+        self.soup = BeautifulSoup(self.text, features="html.parser")
         self.deBilt = self.soup.find('td', text='De Bilt').parent
 
     def retrieve_temperature(self):
@@ -33,10 +36,23 @@ class WeatherEntry():
         except:
             return "Fatal error retrieving wind"
 
+class Command(BaseCommand):
 
+    def handle(self, *args, **kwargs):
+        s = sched.scheduler(time.time, time.sleep)
+        def fetch(sc):
+            url = 'https://www.knmi.nl/nederland-nu/weer/waarnemingen'
+            weather_entry = WeatherEntry(url)
+            db_entry = Page(temperature=weather_entry.retrieve_temperature(), date=weather_entry.retrieve_date())
+            db_entry.save()
+            s.enter(60, 1, fetch, (sc, ))
 
-def main():
-    url = 'https://www.knmi.nl/nederland-nu/weer/waarnemingen'
-    weather_entry = WeatherEntry(url)
-    db_entry = Page(temperature=weather_entry.retrieve_temperature(), date=weather_entry.retrieve_date())
-    db_entry.save()
+        s.enter(60, 1, fetch, (s, ))
+        s.run()
+        
+
+#def main():
+#    url = 'https://www.knmi.nl/nederland-nu/weer/waarnemingen'
+#    weather_entry = WeatherEntry(url)
+#    db_entry = Page(temperature=weather_entry.retrieve_temperature(), date=weather_entry.retrieve_date())
+#    db_entry.save()

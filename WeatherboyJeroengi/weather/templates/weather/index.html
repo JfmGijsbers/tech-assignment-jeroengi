@@ -6,6 +6,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="script.js" type="module"></script>
 <meta name="description" content="Wouldn't you like to know, weatherboy">
+<meta http-equiv="refresh" content="300">
 <link rel="stylesheet" href="style.css">
 
 </style>
@@ -14,7 +15,7 @@
     <div id="app">
         <div class="col-md-6 col-sm-6">
             <table class="table" id="table">
-                <thead class="thead-dark">
+                <thead class="thead-primary=">
                     <tr>
                         <th scope="col">Temperature</th>
                         <th scope="col">Date</th>
@@ -23,32 +24,29 @@
                 <tbody>
                     {% for entry in entries %}
                     <tr>
-                        <td>{{ entry.temperature }}</td>
+                        <td>{{ entry.temperature }} °C</td>
                         <td>{{ entry.date | date:"H:i, M d"}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            <div class="pagination">
-                <span class="step-links">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1">&laquo; first</a>
-                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                    {% endif %}
-            
-                    <span class="current">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                    </span>
-            
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">next</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                    {% endif %}
-                </span>
-            </div>
-        </div>
-        <div class="col-md-6 col-sm-6">
-            Graph will be here
+            {% if is_paginated %}
+        {% if page_obj.has_previous %}
+            <a class="btn btn-outline-primary mb-4" href="?page=1">First</a>
+            <a class="btn btn-outline-primary mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}   
+                <a class="btn btn-primary mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a class="btn btn-outline-primary mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <a class="btn btn-outline-primary mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a class="btn btn-outline-primary mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+    {% endif %}
         </div>
         
     </div>

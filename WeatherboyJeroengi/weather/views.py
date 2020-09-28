@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView
 from django.core.paginator import Paginator
 
+
 # Create your views here.
 def home(request):
     #temperature_list = Page.objects.all()
@@ -29,6 +30,8 @@ def home(request):
 
     
 class EntryList(ListView):
+    #from weather.retrieve_new_entry import main
+    #main()
     paginate_by = 10
     template_name = 'weather/index.html'
     context_object_name = 'entries'
