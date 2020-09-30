@@ -1,10 +1,8 @@
-{% load static %}
 <html>
 
 <title> Weatherboy </title>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<link rel="stylesheet" href="{% static "styles.css"%}">
 </script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="script.js" type="module"></script>
@@ -15,7 +13,7 @@
 </style>
 
 <body>
-    <div id="app" style="margin: 20px">
+    <div id="app">
         <div class="col-md-6 col-sm-6">
             <table class="table" id="table">
                 <thead class="thead-primary=">
@@ -51,13 +49,8 @@
             {% endif %}
             {% endif %}
         </div>
-        <a class="btn btn-primary" href="history/">See more</a>
-        <form method="post">
-            {% csrf_token %}
-            <button class="btn btn-info" type="submit" name="run_script">Refresh data</button>
-        </form>
     </div>
-    
+
 </body>
 
 </html>

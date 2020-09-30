@@ -9,6 +9,16 @@ import threading
 
 # Since I did not get the refresh-functionality working on the ListView-page, 
 # I made this separate refreshing-page.
+def home(request):
+    if request.method == 'POST' and 'run_script' in request.POST:
+        from weather.retrieve_new_entry import main
+        main()
+        return HttpResponseRedirect('')
+    context = {
+        'entries': Page.objects.all().order_by('-date')[:10],
+    }
+    return render(request, 'weather/index.html', context=context)
+
 def refresh(request):
     from weather.retrieve_new_entry import main
     main()
@@ -21,7 +31,7 @@ def refresh(request):
 # adding of new data to the database.
 class EntryList(ListView):
     paginate_by = 10
-    template_name = 'weather/index.html'
+    template_name = 'weather/history.html'
     context_object_name = 'entries' # Name for referencing all the Page objects in the HTML template
     ordering = ['-date'] # We want to order the data from greatest (== most recent) to smallest
     model = Page # This retrieves all objects matching Page from the database. A similar SQL query would be:
